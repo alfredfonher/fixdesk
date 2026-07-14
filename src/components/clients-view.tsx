@@ -17,11 +17,9 @@ interface ClientsViewProps {
   onRequestEdit: (recordId: string, recordName: string, callback: () => void) => void
   editingRecordId: string | null
   clearEdit: () => void
-  canUseWhatsApp?: boolean
-  onBlockedFeature?: (featureLabel: string) => void
 }
 
-export function ClientsView({ isAuthenticated, onRequestEdit, editingRecordId, clearEdit, canUseWhatsApp = true, onBlockedFeature }: ClientsViewProps) {
+export function ClientsView({ isAuthenticated, onRequestEdit, editingRecordId, clearEdit }: ClientsViewProps) {
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -229,11 +227,6 @@ export function ClientsView({ isAuthenticated, onRequestEdit, editingRecordId, c
                   variant="outline"
                   className="flex-1 gap-2 text-success border-success/30 hover:bg-success/10 hover:text-success"
                   onClick={() => {
-                    if (!canUseWhatsApp) {
-                      onBlockedFeature?.("WhatsApp")
-                      return
-                    }
-
                     const cleaned = selectedClient.mobile.replace(/[^0-9+]/g, "")
                     const num = cleaned.startsWith("+") ? cleaned : `+53${cleaned}`
                     window.open(`https://wa.me/${num.replace("+", "")}`, "_blank")

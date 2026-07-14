@@ -24,10 +24,9 @@ interface RepairsViewProps {
   onRequestEdit: (recordId: string, recordName: string, callback: () => void) => void
   editingRecordId: string | null
   clearEdit: () => void
-  canUseAdvancedSpecs?: boolean
 }
 
-export function RepairsView({ isAuthenticated, onRequestEdit, editingRecordId, clearEdit, canUseAdvancedSpecs = true }: RepairsViewProps) {
+export function RepairsView({ isAuthenticated, onRequestEdit, editingRecordId, clearEdit }: RepairsViewProps) {
   const [repairs, setRepairs] = useState<Repair[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -409,7 +408,6 @@ export function RepairsView({ isAuthenticated, onRequestEdit, editingRecordId, c
                 ramType={formRamType} ramSize={formRamSize}
                 ramSticks={formRamSticks} gpuModel={formGpuModel} vramSize={formVramSize} vramType={formVramType}
                 onChange={handleSpecChange}
-                advancedSpecsEnabled={canUseAdvancedSpecs}
               />
 
               <div className="space-y-1.5">

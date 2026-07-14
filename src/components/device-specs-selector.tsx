@@ -8,7 +8,6 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { FeatureBlockedState } from "@/components/license-gate"
 
 interface DeviceSpecsProps {
   brand: string
@@ -22,11 +21,10 @@ interface DeviceSpecsProps {
   vramSize: string
   vramType: string
   onChange: (field: string, value: string) => void
-  advancedSpecsEnabled?: boolean
 }
 
 export function DeviceSpecsSelector({
-  brand, model, storageType, storageCapacity, ramType, ramSize, ramSticks, gpuModel, vramSize, vramType, onChange, advancedSpecsEnabled = true,
+  brand, model, storageType, storageCapacity, ramType, ramSize, ramSticks, gpuModel, vramSize, vramType, onChange,
 }: DeviceSpecsProps) {
   const [gpuOtraSelected, setGpuOtraSelected] = useState(false)
   const isOtraGpu = gpuOtraSelected || (!!gpuModel && !GPU_MODELS.some(g => g.value === gpuModel))
@@ -52,13 +50,7 @@ export function DeviceSpecsSelector({
         </div>
       </div>
 
-      {!advancedSpecsEnabled ? (
-        <FeatureBlockedState
-          title="Especificaciones avanzadas no disponibles"
-          description="La edición Basic permite registrar marca y modelo. Los detalles avanzados de hardware requieren Pro o Business."
-        />
-      ) : (
-        <>
+      <Separator />
 
       <Separator />
 
@@ -188,8 +180,6 @@ export function DeviceSpecsSelector({
           </div>
         </div>
       </div>
-        </>
-      )}
     </div>
   )
 }

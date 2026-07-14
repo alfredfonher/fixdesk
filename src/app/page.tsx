@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useFirstRun } from "@/hooks/useFirstRun";
 import { AuthProvider, useAuth } from "@/components/auth-provider";
 import { FirstRunWizard } from "@/components/first-run-wizard";
@@ -11,11 +11,10 @@ import { UserManagementDialog } from "@/components/user-management-dialog"
 import { RepairsView } from "@/components/repairs-view"
 import { ClientsView } from "@/components/clients-view"
 import { ChatView } from "@/components/chat-view"
-import { Button } from "@/components/ui/button"
 import { APP_METADATA, getAppDisplayVersion } from "@/lib/app-metadata"
 import {
   Wrench, Users, Bot,
-  ChevronLeft, ChevronRight, Bell, Lock, LogOut,
+  ChevronLeft, ChevronRight, Lock, LogOut,
   KeyRound, UserCog, Clock, Info,
 } from "lucide-react"
 import Swal from "sweetalert2"
@@ -280,14 +279,7 @@ function AppContent() {
           {/* User Management */}
           {isAuthenticated && (
             <button
-              onClick={() => {
-                if (!canUseFeature("roles")) {
-                  void showBlockedFeature("Gestión de usuarios y roles")
-                  return
-                }
-
-                setShowUserManagement(true)
-              }}
+              onClick={() => setShowUserManagement(true)}
                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-base text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
               title="Gestión de Usuarios"
             >
