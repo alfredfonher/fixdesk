@@ -1,0 +1,17 @@
+{
+  "name": "TechFix Pro",
+  "short_name": "TechFix",
+  "description": "Sistema de gestión para taller de reparación y venta de laptops",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== CLIENTES ====================
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  address   String   @default("")
+  mobile    String
+  email     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repairs   Repair[]
+  purchases Purchase[]
+  sales     Sale[]
+}
+
+// ==================== REPARACIONES ====================
+model Repair {
+  id               String   @id @default(cuid())
+  clientId         String
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Datos del equipo
+  brand            String
+  model            String
+  storageType      String   @default("")
+  storageCapacity  String   @default("")
+  ramType          String   @default("")
+  ramSize          String   @default("")
+  ramSticks        String   @default("")  // "1x 8GB", "2x 4GB", etc.
+  gpuModel         String   @default("")
+  vramSize         String   @default("")
+  vramType         String   @default("")
+
+  // Reparación
+  faultDescription String
+  proposedPrice    Float    @default(0)
+  status           String   @default("pending")  // pending, in_progress, completed, delivered
+  notes            String   @default("")
+
+  // Garantía: 3 meses desde repairDate
+  repairDate       DateTime @default(now())   // Fecha de reparación para establecer garantía
+  warrantyExpires  DateTime?                  // Se calcula: repairDate + 3 meses
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+// ==================== COMPRAS ====================
+model Purchase {
+  id           String   @id @default(cuid())
+  clientId     String
+  client       Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Datos del equipo comprado
+  brand        String
+  model        String
+  storageType  String   @default("")
+  storageCapacity String @default("")
+  ramType      String   @default("")
+  ramSize      String   @default("")
+  ramSticks    String   @default("")
+  gpuModel     String   @default("")
+  vramSize     String   @default("")
+  vramType     String   @default("")
+
+  // Compra
+  purchasePrice Float   @default(0)
+  description   String  @default("")
+  notes         String  @default("")
+  purchaseDate  DateTime @default(now())
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ==================== VENTAS ====================
+model Sale {
+  id             String   @id @default(cuid())
+  clientId       String
+  client         Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Datos del equipo vendido
+  brand          String
+  model          String
+  storageType    String   @default("")
+  storageCapacity String @default("")
+  ramType        String   @default("")
+  ramSize        String   @default("")
+  ramSticks      String   @default("")
+  gpuModel       String   @default("")
+  vramSize       String   @default("")
+  vramType       String   @default("")
+
+  // Venta
+  saleType       String   @default("refurbished_own")  // refurbished_own, refurbished_imported
+  salePrice      Float    @default(0)
+  description    String   @default("")
+  notes          String   @default("")
+
+  // Garantía según tipo: reacondicionadas propias (15 días), importadas (30 días)
+  saleDate       DateTime @default(now())  // Fecha de salida para establecer garantía
+  warrantyDays   Int      @default(15)     // 15 o 30 días según tipo
+  warrantyExpires DateTime?               // Se calcula: saleDate + warrantyDays
+
+  // Link to inventory laptop consumed by this sale
+  inventoryItemId String?  @unique
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ==================== INVENTARIO ====================
+model InventoryItem {
+  id              String   @id @default(cuid())
+  category        String   // storage, ram, screen, battery, keyboard, charger, motherboard, fan, cable, laptop, other
+  name            String
+  type            String   @default("")
+  capacity        String   @default("")
+  quantity        Int      @default(0)
+  price           Float    @default(0)
+  description     String   @default("")
+
+  // Laptop linkage fields
+  purchaseId      String?  @unique
+  source          String   @default("manual") // manual, purchase
+  status          String   @default("available") // available, sold, reserved
+  brand           String   @default("")
+  ramType         String   @default("")
+  ramSize         String   @default("")
+  ramSticks       String   @default("")
+  gpuModel        String   @default("")
+  vramSize        String   @default("")
+  vramType        String   @default("")
+  storageType     String   @default("")
+  storageCapacity String   @default("")
+
+  sale            Sale?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ==================== USUARIOS ====================
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  displayName  String   @default("")
+  role         String   @default("admin")  // admin, technician, viewer
+  isActive     Boolean  @default(true)
+  lastLogin    DateTime?
+  sessions     Session[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ==================== SESIONES ====================
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+// ==================== CONTABILIDAD ====================
+model LedgerEntry {
+  id          String   @id @default(cuid())
+  type        String   // income, expense, adjustment
+  sourceType  String   // purchase, sale, repair, manual
+  sourceId    String
+  amount      Float
+  currency    String   @default("CUP")
+  exchangeRate Float  @default(1.0)
+  description String   @default("")
+  reference   String   @default("")
+  status      String   @default("posted") // posted, cancelled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sourceType, sourceId])
+  @@index([status])
+}
+
+// ==================== CONFIGURACIÓN ====================
+model Settings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
