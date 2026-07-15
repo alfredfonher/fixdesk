@@ -12,6 +12,7 @@ import { RepairsView } from "@/components/repairs-view"
 import { ClientsView } from "@/components/clients-view"
 import { ChatView } from "@/components/chat-view"
 import { APP_METADATA, getAppDisplayVersion } from "@/lib/app-metadata"
+import { Badge } from "@/components/ui/badge"
 import {
   Wrench, Users, Bot,
   ChevronLeft, ChevronRight, Lock, LogOut,
@@ -302,27 +303,14 @@ function AppContent() {
 
           {isAuthenticated && (
             <button
-              onClick={() => setActiveView("settings")}
-              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-base transition-colors ${
-                activeView === "settings"
-                  ? "bg-brand text-brand-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-              title="Apariencia"
+              onClick={() => setShowAppInfo(true)}
+              className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-base text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              title="Información de la app"
             >
-              <Settings className="w-4 h-4" />
-              {!sidebarCollapsed && <span>Apariencia</span>}
+              <Info className="w-4 h-4" />
+              {!sidebarCollapsed && <span>Información</span>}
             </button>
           )}
-
-          <button
-            onClick={() => setShowAppInfo(true)}
-            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-base text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-            title="Información de la app"
-          >
-            <Info className="w-4 h-4" />
-            {!sidebarCollapsed && <span>Información</span>}
-          </button>
 
           {!sidebarCollapsed && (
             <div className="rounded-xl border border-border/60 bg-muted/20 px-3 py-2 text-[11px] text-muted-foreground">

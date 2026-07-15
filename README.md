@@ -1,74 +1,55 @@
 # FixDesk
 
-A modern repair shop management system built with Next.js, Electron, Prisma, and SQLite.
+> Web-based repair shop management system with AI-powered summaries.
 
-## Features
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma)
+![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red)
 
-- **Repair Tracking** - Manage repair tickets from intake to delivery
-- **Client Management** - Keep track of customers and their devices
-- **AI Assistant** - Get intelligent summaries and insights about your repairs
-- **Desktop App** - Native desktop experience with Electron
+## What it does
+
+FixDesk helps repair shops manage their workflow:
+
+- **Repair Tracking** — intake to delivery, full lifecycle
+- **Client Management** — customers, devices, history
+- **AI Assistant** — local Ollama-powered summaries and insights
+- **Dashboard** — stats, charts, recent activity
 
 ## Tech Stack
 
-- **Frontend:** Next.js, React, Tailwind CSS, shadcn/ui
-- **Backend:** Next.js API Routes, Prisma ORM
-- **Database:** SQLite
-- **Desktop:** Electron
-- **AI:** Ollama integration for local AI summaries
+| Layer | Tech |
+|-------|------|
+| Frontend | Next.js 16, React 19, Tailwind CSS, shadcn/ui |
+| Backend | Next.js API Routes, Prisma ORM |
+| Database | SQLite |
+| AI | Ollama (local inference) |
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- pnpm (recommended)
-- Ollama (for AI features)
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
 git clone https://github.com/alfredfonher/fixdesk.git
 cd fixdesk
-
-# Install dependencies
 pnpm install
-
-# Set up the database
-npx prisma generate
-npx prisma db push
-
-# Start the development server
-pnpm dev
+pnpm run setup:web
+pnpm run dev:web
 ```
 
-### Desktop App
-
-```bash
-# Build the Electron app
-pnpm electron:build
-```
+Open [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
 
 ```
 fixdesk/
 ├── src/
-│   ├── app/              # Next.js app router
-│   │   ├── api/          # API routes
-│   │   └── page.tsx      # Main application
-│   ├── components/       # React components
-│   └── lib/              # Utilities and database
-├── prisma/               # Database schema
-├── electron/             # Electron main process
-└── public/               # Static assets
+│   ├── app/          # Next.js App Router + API
+│   ├── components/   # React components
+│   └── lib/          # Utilities, DB, auth
+├── prisma/           # Database schema
+├── scripts/          # Setup & utility scripts
+└── public/           # Static assets
 ```
 
 ## License
 
-This software is proprietary and confidential. See [LICENSE](LICENSE) for details.
-
-## Support
-
-For issues and questions, please open an issue on GitHub.
+Proprietary — All Rights Reserved. See [LICENSE](LICENSE).

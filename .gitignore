@@ -61,10 +61,6 @@ server.log
 # Local Pi runtime state
 .atl/
 
-# Electron
-dist-electron/
-dist/
-
 # Local test/runtime databases
 db/test/
 prisma/test.db
